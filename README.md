@@ -1,10 +1,15 @@
 🌱 Biodegradable Phone Case (Agri-Waste)
 📌 Overview
 Eco-friendly phone case made from agricultural waste
+
 Uses materials like wheat straw, bamboo fiber, and PLA
+
 Reduces plastic pollution and promotes sustainability
+
 ♻️ Features
+
 Biodegradable and compostable
+
 Lightweight and durable
 Non-toxic and eco-friendly
 ⚙️ Process
