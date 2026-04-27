@@ -1,42 +1,45 @@
-# Biodegradable Phone Case (Agri-Waste)
+# Online Ticket Booking Portal
 
 ## Overview
 
-* Eco-friendly phone case made from agricultural waste
-* Uses wheat straw, bamboo fiber, and PLA
-* Reduces plastic pollution
+* Web-based platform for booking tickets online
+* Used for movies, buses, trains, and events
+* Provides easy and fast booking experience
 
 ## Features
 
-* Biodegradable and compostable
-* Lightweight and durable
-* Non-toxic materials
+* User registration and login
+* Search and select tickets
+* Online payment integration
+* Booking confirmation and history
 
 ## Process
 
-* Collect agri-waste
-* Clean and dry
-* Convert to fibers
-* Mix with biopolymers
-* Mold into case
+* User registers/logs in
+* Searches for tickets
+* Selects seats/options
+* Makes payment
+* Receives confirmation
 
 ## Advantages
 
-* Reduces plastic waste
-* Uses renewable resources
-* Controls pollution
+* Saves time and effort
+* 24/7 accessibility
+* Easy payment options
+* Instant booking confirmation
 
 ## Limitations
 
-* Less durable than plastic
-* Needs proper composting
+* Requires internet connection
+* Risk of payment failure
+* Security concerns
 
 ## Future Scope
 
-* Improve durability
-* Reduce cost
-* Expand eco-products
+* Add mobile app support
+* Improve security features
+* Include AI-based recommendations
 
 ## Author
 
-* Your Name
+* G.Padma Pavani
