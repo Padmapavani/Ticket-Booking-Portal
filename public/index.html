@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ticket Booking System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #111111;
+      border-bottom: 2px solid #1a73e8;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #1a73e8;
+    }
+
+    .logo span { color: white; }
+    .nav-links { display: flex; gap: 10px; }
+
+    .nav-btn {
+      background: none;
+      border: 1px solid #333;
+      color: #aaa;
+      padding: 5px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background-color: #1a73e8;
+      color: white;
+      border-color: #1a73e8;
+    }
+
+    .page { display: none; padding: 20px; max-width: 1000px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    .hero { text-align: center; padding: 30px 0 20px; }
+
+    .hero h1 {
+      font-size: 2rem;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 span { color: #1a73e8; }
+    .hero p { color: #777; font-size: 15px; }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      font-size: 14px;
+      outline: none;
+      border-radius: 8px;
+    }
+
+    .search-box:focus { border-color: #1a73e8; }
+    .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .tab {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #aaa;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 6px;
+    }
+
+    .tab.active, .tab:hover {
+      background: #1a73e8;
+      color: white;
+      border-color: #1a73e8;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .event-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .event-card:hover { border-color: #1a73e8; }
+
+    .card-header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      font-size: 2.5rem;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .card-body { padding: 12px; }
+
+    .card-category {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #1a73e8;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .card-meta { color: #777; font-size: 13px; line-height: 1.7; }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-top: 1px solid #2a2a2a;
+      background: #111;
+    }
+
+    .card-price { font-size: 1.1rem; font-weight: bold; color: #1a73e8; }
+    .card-seats { font-size: 12px; color: #555; }
+
+    .btn-book {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 6px;
+    }
+
+    .btn-book:hover { background: #1558b0; }
+    .btn-book:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+    .booking-header {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border-radius: 10px;
+    }
+
+    .booking-emoji { font-size: 2.5rem; }
+    .booking-info h2 { font-size: 1.2rem; margin-bottom: 4px; color: #fff; }
+    .booking-info p { color: #777; font-size: 13px; line-height: 1.6; }
+
+    .form-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .form-card h3 { color: #fff; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label { font-size: 13px; font-weight: bold; color: #aaa; }
+
+    input, select {
+      padding: 8px;
+      border: 1px solid #333;
+      background: #111;
+      color: #e0e0e0;
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+      border-radius: 6px;
+    }
+
+    input:focus, select:focus { border-color: #1a73e8; }
+    select option { background: #111; }
+
+    .price-summary {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      padding: 12px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .price-label { color: #777; font-size: 14px; }
+    .price-total { font-size: 1.3rem; font-weight: bold; color: #1a73e8; }
+    .error-msg { color: #e74c3c; font-size: 12px; }
+
+    .btn-submit {
+      width: 100%;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+
+    .btn-submit:hover { background: #1558b0; }
+
+    .btn-back {
+      background: none;
+      border: 1px solid #333;
+      color: #aaa;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+    }
+
+    .btn-back:hover { border-color: #1a73e8; color: #1a73e8; }
+
+    .success-card {
+      background: #1a1a1a;
+      border: 1px solid #1a73e8;
+      padding: 30px 20px;
+      text-align: center;
+      max-width: 480px;
+      margin: 30px auto;
+      border-radius: 12px;
+    }
+
+    .success-icon { font-size: 3rem; margin-bottom: 10px; }
+    .success-card h2 { color: #1a73e8; margin-bottom: 6px; }
+
+    .ticket-id {
+      display: inline-block;
+      background: #111;
+      border: 1px dashed #1a73e8;
+      color: #1a73e8;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 6px 20px;
+      letter-spacing: 2px;
+      margin: 10px 0;
+      border-radius: 6px;
+    }
+
+    .ticket-details {
+      text-align: left;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      padding: 12px 15px;
+      margin: 15px 0;
+      font-size: 13px;
+      line-height: 2;
+      color: #777;
+      border-radius: 8px;
+    }
+
+    .ticket-details strong { color: #e0e0e0; }
+    .bookings-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .booking-item {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-radius: 10px;
+    }
+
+    .booking-item-info h3 { font-size: 15px; margin-bottom: 4px; color: #fff; }
+    .booking-item-info p { color: #777; font-size: 13px; line-height: 1.6; }
+
+    .booking-badge {
+      background: #0d2a4a;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 20px;
+    }
+
+    .btn-cancel {
+      background: none;
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 6px;
+    }
+
+    .btn-cancel:hover { background: #e74c3c; color: white; }
+
+    .empty-state { text-align: center; padding: 40px; color: #555; }
+    .empty-state .big { font-size: 2.5rem; margin-bottom: 10px; }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      padding: 12px 20px;
+      color: #e0e0e0;
+      font-size: 14px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999;
+      border-radius: 8px;
+    }
+
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { border-color: #1a73e8; }
+    #toast.error { border-color: #e74c3c; }
+
+    .loader { text-align: center; padding: 40px; color: #555; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Ticket<span>Zone</span> 🎟️</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('events')">Events</button>
+    <button class="nav-btn" onclick="showPage('mybookings')">My Bookings</button>
+  </div>
+</nav>
+
+<!-- EVENTS PAGE -->
+<div class="page active" id="page-events">
+  <div class="hero">
+    <h1>Book Your Next <span>Experience</span> 🎟️</h1>
+    <p>Concerts, sports, movies and more</p>
+  </div>
+  <div class="controls">
+    <input class="search-box" type="text" id="searchInput" placeholder="Search events or venues..." oninput="filterEvents()"/>
+    <div class="filter-tabs" id="filterTabs"></div>
+  </div>
+  <div class="events-grid" id="eventsGrid">
+    <div class="loader">Loading events...</div>
+  </div>
+</div>
+
+<!-- BOOKING PAGE -->
+<div class="page" id="page-booking">
+  <button class="btn-back" onclick="showPage('events')">← Back to Events</button>
+  <div class="booking-header" id="bookingHeader"></div>
+  <div class="form-card">
+    <h3 style="margin-bottom:15px;">Enter Your Details</h3>
+    <form id="bookingForm" onsubmit="submitBooking(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="fname" placeholder="e.g. Ravi Kumar" required />
+          <span class="error-msg" id="err-name"></span>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="femail" placeholder="you@example.com" required />
+          <span class="error-msg" id="err-email"></span>
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="fphone" placeholder="10-digit number" required />
+          <span class="error-msg" id="err-phone"></span>
+        </div>
+        <div class="form-group">
+          <label>Number of Seats *</label>
+          <select id="fseats" onchange="updatePrice()">
+            <option value="1">1 Seat</option>
+            <option value="2">2 Seats</option>
+            <option value="3">3 Seats</option>
+            <option value="4">4 Seats</option>
+            <option value="5">5 Seats</option>
+          </select>
+        </div>
+      </div>
+      <div class="price-summary">
+        <div>
+          <div class="price-label">Total Amount</div>
+          <div style="color:#555; font-size:12px;" id="priceBreakdown"></div>
+        </div>
+        <div class="price-total" id="totalPrice">₹0</div>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">Confirm Booking</button>
+    </form>
+  </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div class="page" id="page-success">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <h2>Booking Confirmed!</h2>
+    <p style="color:#777; margin-bottom:5px;">Your Ticket ID</p>
+    <div class="ticket-id" id="successTicketId"></div>
+    <div class="ticket-details" id="successDetails"></div>
+    <button class="btn-submit" onclick="showPage('events')">Browse More Events</button>
+    <br><br>
+    <button class="btn-back" style="width:100%;" onclick="showPage('mybookings')">View My Bookings</button>
+  </div>
+</div>
+
+<!-- MY BOOKINGS PAGE -->
+<div class="page" id="page-mybookings">
+  <h2 style="margin-bottom:5px; color:#fff;">My Bookings</h2>
+  <p style="color:#777; margin-bottom:20px;">All your confirmed tickets</p>
+  <div class="bookings-list" id="bookingsList"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const API = 'http://localhost:3000/api';
+  let allEvents = [];
+  let currentEvent = null;
+  let activeCategory = 'All';
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    if (name === 'mybookings') {
+      document.querySelectorAll('.nav-btn')[1].classList.add('active');
+      loadBookings();
+    } else {
+      document.querySelectorAll('.nav-btn')[0].classList.add('active');
+    }
+    if (name === 'events') loadEvents();
+    window.scrollTo(0, 0);
+  }
+
+  async function loadEvents() {
+    try {
+      const res = await fetch(`${API}/events`);
+      const json = await res.json();
+      allEvents = json.data;
+      buildCategoryTabs();
+      renderEvents(allEvents);
+    } catch (err) {
+      document.getElementById('eventsGrid').innerHTML =
+        '<p style="color:red;text-align:center;padding:20px">Could not connect to server. Make sure node server.js is running!</p>';
+    }
+  }
+
+  function buildCategoryTabs() {
+    const cats = ['All', ...new Set(allEvents.map(e => e.category))];
+    const tabs = document.getElementById('filterTabs');
+    tabs.innerHTML = cats.map(c =>
+      `<button class="tab ${c === activeCategory ? 'active' : ''}" onclick="filterByCategory('${c}')">${c}</button>`
+    ).join('');
+  }
+
+  function filterByCategory(cat) {
+    activeCategory = cat;
+    buildCategoryTabs();
+    filterEvents();
+  }
+
+  function filterEvents() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let filtered = allEvents;
+    if (activeCategory !== 'All')
+      filtered = filtered.filter(e => e.category === activeCategory);
+    if (q)
+      filtered = filtered.filter(e =>
+        e.name.toLowerCase().includes(q) || e.venue.toLowerCase().includes(q));
+    renderEvents(filtered);
+  }
+
+  function renderEvents(events) {
+    const grid = document.getElementById('eventsGrid');
+    if (!events.length) {
+      grid.innerHTML = '<div class="empty-state"><div class="big">🔍</div><p>No events found.</p></div>';
+      return;
+    }
+    grid.innerHTML = events.map(e => `
+      <div class="event-card" onclick="openBooking('${e.id}')">
+        <div class="card-header">${e.image}</div>
+        <div class="card-body">
+          <div class="card-category">${e.category}</div>
+          <div class="card-title">${e.name}</div>
+          <div class="card-meta">
+            📅 ${formatDate(e.date)} &nbsp;•&nbsp; ⏰ ${e.time}<br>
+            📍 ${e.venue}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div>
+            <div class="card-price">₹${e.price.toLocaleString()}</div>
+            <div class="card-seats">${e.available} seats left</div>
+          </div>
+          <button class="btn-book" ${e.available === 0 ? 'disabled' : ''}>
+            ${e.available === 0 ? 'Sold Out' : 'Book Now'}
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function openBooking(eventId) {
+    try {
+      const res = await fetch(`${API}/events/${eventId}`);
+      const json = await res.json();
+      currentEvent = json.data;
+      document.getElementById('bookingHeader').innerHTML = `
+        <div class="booking-emoji">${currentEvent.image}</div>
+        <div class="booking-info">
+          <h2>${currentEvent.name}</h2>
+          <p>📅 ${formatDate(currentEvent.date)} &nbsp;•&nbsp; ⏰ ${currentEvent.time}</p>
+          <p>📍 ${currentEvent.venue}</p>
+          <p style="color:#1a73e8; font-weight:bold; margin-top:4px;">₹${currentEvent.price.toLocaleString()} per seat</p>
+        </div>
+      `;
+      document.getElementById('bookingForm').reset();
+      clearErrors();
+      updatePrice();
+      showPage('booking');
+    } catch (err) {
+      showToast('Failed to load event.', 'error');
+    }
+  }
+
+  function updatePrice() {
+    if (!currentEvent) return;
+    const seats = parseInt(document.getElementById('fseats').value);
+    const total = seats * currentEvent.price;
+    document.getElementById('totalPrice').textContent = `₹${total.toLocaleString()}`;
+    document.getElementById('priceBreakdown').textContent = `${seats} × ₹${currentEvent.price.toLocaleString()}`;
+  }
+
+  function validateForm() {
+    clearErrors();
+    let valid = true;
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const phone = document.getElementById('fphone').value.trim();
+    if (name.length < 2) { document.getElementById('err-name').textContent = 'Enter a valid name'; valid = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('err-email').textContent = 'Enter a valid email'; valid = false; }
+    if (!/^\d{10}$/.test(phone)) { document.getElementById('err-phone').textContent = 'Must be exactly 10 digits'; valid = false; }
+    return valid;
+  }
+
+  function clearErrors() {
+    ['err-name', 'err-email', 'err-phone'].forEach(id => {
+      document.getElementById(id).textContent = '';
+    });
+  }
+
+  async function submitBooking(e) {
+    e.preventDefault();
+    if (!validateForm()) return;
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Processing...';
+    btn.disabled = true;
+    const payload = {
+      eventId: currentEvent.id,
+      name: document.getElementById('fname').value.trim(),
+      email: document.getElementById('femail').value.trim(),
+      phone: document.getElementById('fphone').value.trim(),
+      seats: parseInt(document.getElementById('fseats').value),
+    };
+    try {
+      const res = await fetch(`${API}/book`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.success) {
+        const b = json.data;
+        document.getElementById('successTicketId').textContent = b.bookingId;
+        document.getElementById('successDetails').innerHTML = `
+          <strong>Event:</strong> ${b.eventName}<br>
+          <strong>Venue:</strong> ${b.venue}<br>
+          <strong>Date:</strong> ${formatDate(b.date)} at ${b.time}<br>
+          <strong>Name:</strong> ${b.name}<br>
+          <strong>Seats:</strong> ${b.seats}<br>
+          <strong>Amount Paid:</strong> ₹${b.totalAmount.toLocaleString()}<br>
+          <strong>Status:</strong> <span style="color:#1a73e8">✅ ${b.status}</span>
+        `;
+        showPage('success');
+        showToast('Booking confirmed!', 'success');
+      } else {
+        showToast(json.message, 'error');
+      }
+    } catch (err) {
+      showToast('Server error. Please try again.', 'error');
+    } finally {
+      btn.textContent = 'Confirm Booking';
+      btn.disabled = false;
+    }
+  }
+
+  async function loadBookings() {
+    const list = document.getElementById('bookingsList');
+    list.innerHTML = '<div class="loader">Loading...</div>';
+    try {
+      const res = await fetch(`${API}/bookings`);
+      const json = await res.json();
+      const bookings = json.data;
+      if (!bookings.length) {
+        list.innerHTML = '<div class="empty-state"><div class="big">🎟️</div><p>No bookings yet. Go book an event!</p></div>';
+        return;
+      }
+      list.innerHTML = bookings.map(b => `
+        <div class="booking-item" id="booking-${b.bookingId}">
+          <div class="booking-item-info">
+            <h3>${b.eventName}</h3>
+            <p>📅 ${formatDate(b.date)} &nbsp;•&nbsp; ⏰ ${b.time}</p>
+            <p>📍 ${b.venue}</p>
+            <p style="margin-top:4px;">👤 ${b.name} &nbsp;•&nbsp; 🪑 ${b.seats} seat(s) &nbsp;•&nbsp; <strong style="color:#1a73e8">₹${b.totalAmount.toLocaleString()}</strong></p>
+            <p style="font-size:12px; color:#555; margin-top:4px;">ID: ${b.bookingId}</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+            <span class="booking-badge">✅ Confirmed</span>
+            <button class="btn-cancel" onclick="cancelBooking('${b.bookingId}')">Cancel</button>
+          </div>
+        </div>
+      `).join('');
+    } catch (err) {
+      list.innerHTML = '<p style="color:red;text-align:center">Could not load bookings.</p>';
+    }
+  }
+
+  async function cancelBooking(bookingId) {
+    if (!confirm('Are you sure you want to cancel this booking?')) return;
+    try {
+      const res = await fetch(`${API}/bookings/${bookingId}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        document.getElementById('booking-' + bookingId)?.remove();
+        showToast('Booking cancelled.', 'success');
+        const list = document.getElementById('bookingsList');
+        if (!list.children.length) {
+          list.innerHTML = '<div class="empty-state"><div class="big">🎟️</div><p>No bookings yet.</p></div>';
+        }
+      } else {
+        showToast(json.message, 'error');
+      }
+    } catch (err) {
+      showToast('Could not cancel. Try again.', 'error');
+    }
+  }
+
+  function formatDate(d) {
+    return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `show ${type}`;
+    setTimeout(() => t.className = '', 3000);
+  }
+
+  loadEvents();
+</script>
+</body>
+</html>
+
